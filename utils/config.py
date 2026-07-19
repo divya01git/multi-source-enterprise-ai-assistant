@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # ---------------------------------------------------------------------
@@ -22,7 +23,21 @@ load_dotenv(ENV_PATH)
 # API Keys
 # ---------------------------------------------------------------------
 
+# Local development:
+#     Reads GROQ_API_KEY from .env
+#
+# Streamlit Cloud:
+#     Reads GROQ_API_KEY from Streamlit Secrets
+
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+
+if not GROQ_API_KEY:
+    try:
+        import streamlit as st
+
+        GROQ_API_KEY = st.secrets.get("GROQ_API_KEY", "")
+    except Exception:
+        GROQ_API_KEY = ""
 
 # ---------------------------------------------------------------------
 # Model Configuration
@@ -77,6 +92,17 @@ WEB_SEARCH_API_KEY = os.getenv(
     ""
 )
 
+if not WEB_SEARCH_API_KEY:
+    try:
+        import streamlit as st
+
+        WEB_SEARCH_API_KEY = st.secrets.get(
+            "WEB_SEARCH_API_KEY",
+            ""
+        )
+    except Exception:
+        WEB_SEARCH_API_KEY = ""
+
 MAX_WEB_RESULTS = 5
 
 # ---------------------------------------------------------------------
@@ -98,5 +124,6 @@ def validate_environment() -> None:
 
     if not GROQ_API_KEY:
         raise RuntimeError(
-            "Missing GROQ_API_KEY inside .env"
+            "Missing GROQ_API_KEY. "
+            "Add it to the local .env file or Streamlit Cloud Secrets."
         )

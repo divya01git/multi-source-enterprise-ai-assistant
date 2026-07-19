@@ -13,3 +13,4 @@ duckduckgo-search==8.1.1
 pandas==2.3.2
 reportlab==4.4.3
 plotly
+ddgs
